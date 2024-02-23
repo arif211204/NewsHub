@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Grid, Box, Link, Image, Text, Skeleton } from "@chakra-ui/react";
-import { fetchArticles } from "../utils/api";
+import { fetchTopBusinessHeadlines } from "../../utils/api";
 
 const SecondMainContent = () => {
   const [articles, setArticles] = useState([]);
@@ -8,13 +8,20 @@ const SecondMainContent = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchArticles();
+      const data = await fetchTopBusinessHeadlines();
       setArticles(data);
       setLoading(false);
     };
 
     fetchData();
   }, []);
+  const handleArticleClick = (article) => {
+    const readArticles = JSON.parse(localStorage.getItem("readArticles")) || [];
+    localStorage.setItem(
+      "readArticles",
+      JSON.stringify([...readArticles, article])
+    );
+  };
 
   return (
     <Grid templateColumns="4fr 1fr" gap={4} p={5}>
@@ -43,6 +50,7 @@ const SecondMainContent = () => {
               bg="gray.50"
               mb="4"
               p={2}
+              onClick={() => handleArticleClick(article)}
             >
               <Link href={article.url} target="_blank">
                 <Skeleton isLoaded={!loading} mr={4}>

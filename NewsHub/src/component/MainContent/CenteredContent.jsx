@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
-import { Box, Link, Image, Text, Flex, Skeleton, Fade } from "@chakra-ui/react";
-import { fetchTopBusinessHeadlines } from "../utils/api";
+import {
+  Box,
+  Link,
+  Image,
+  Text,
+  Flex,
+  Skeleton,
+  Fade,
+  Heading,
+  Center,
+} from "@chakra-ui/react";
+import { fetchTopBusinessHeadlines } from "../../utils/api";
 
 const CenteredContent = () => {
   const [articles, setArticles] = useState([]);
@@ -20,9 +30,21 @@ const CenteredContent = () => {
 
     fetchData();
   }, []);
+  const handleArticleClick = (article) => {
+    const readArticles = JSON.parse(localStorage.getItem("readArticles")) || [];
+    localStorage.setItem(
+      "readArticles",
+      JSON.stringify([...readArticles, article])
+    );
+  };
 
   return (
     <Fade in>
+      <Center>
+        <Heading fontSize="2xl" fontWeight="bold" color="blue.500">
+          Recomended For you
+        </Heading>
+      </Center>
       <Flex p={5} justifyContent="center">
         {loading ? (
           <>
@@ -52,8 +74,10 @@ const CenteredContent = () => {
               borderColor="gray.200"
               borderRadius="md"
               m="2"
+              isTruncated
               transition="all 0.3s ease-in-out"
               _hover={{ boxShadow: "lg", transform: "scale(1.05)" }}
+              onClick={() => handleArticleClick(article)}
             >
               <Link href={article.url} isExternal>
                 <Text
@@ -83,6 +107,14 @@ const CenteredContent = () => {
           ))
         )}
       </Flex>
+      <hr
+        style={{
+          height: "1px",
+          width: "100%",
+          border: "none",
+          borderTop: "2px solid #CBD5E0",
+        }}
+      />
     </Fade>
   );
 };

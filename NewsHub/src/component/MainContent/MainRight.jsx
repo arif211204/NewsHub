@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Box, Link, Image, Text, Skeleton, Fade } from "@chakra-ui/react";
-import { fetchArticles } from "../utils/api";
+import { fetchArticles } from "../../utils/api";
 
 const MainRight = () => {
   const [articles, setArticles] = useState([]);
@@ -10,7 +10,7 @@ const MainRight = () => {
     const fetchData = async () => {
       try {
         const data = await fetchArticles();
-        setArticles(data);
+        setArticles(data.slice(0, 5));
         setLoading(false);
       } catch (error) {
         console.error("Error fetching articles:", error);
@@ -20,6 +20,13 @@ const MainRight = () => {
 
     fetchData();
   }, []);
+  const handleArticleClick = (article) => {
+    const readArticles = JSON.parse(localStorage.getItem("readArticles")) || [];
+    localStorage.setItem(
+      "readArticles",
+      JSON.stringify([...readArticles, article])
+    );
+  };
 
   return (
     <Box>
@@ -51,8 +58,10 @@ const MainRight = () => {
               bg="gray.50"
               transition="all 0.3s ease-in-out"
               _hover={{ boxShadow: "lg" }}
-              isTruncated
               width={200}
+              onClick={() => handleArticleClick(article)}
+              isTruncated
+              m={4}
             >
               <Link href={article.url} target="_blank">
                 <Image

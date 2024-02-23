@@ -1,19 +1,33 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Flex, Box, Link, Image, Text, Skeleton } from "@chakra-ui/react";
-import { fetchTopBusinessHeadlines } from "../utils/api";
+import { fetchTechCrunchTopHeadlines } from "../../utils/api";
 
 const ThirdMainContent = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
-    const data = await fetchTopBusinessHeadlines();
-    setArticles(data);
-    setLoading(false);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchTechCrunchTopHeadlines();
+        setArticles(data.slice(0, 8));
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching top business headlines:", error);
+        setLoading(false);
+      }
+    };
 
-  fetchData();
+    fetchData();
+  }, []);
+  const handleArticleClick = (article) => {
+    const readArticles = JSON.parse(localStorage.getItem("readArticles")) || [];
+    localStorage.setItem(
+      "readArticles",
+      JSON.stringify([...readArticles, article])
+    );
+  };
 
   return (
     <Flex flexDirection="column" gap={5}>
@@ -27,10 +41,11 @@ const ThirdMainContent = () => {
               <Box
                 key={colIndex}
                 flex={1}
-                p={2}
+                p={3}
                 boxShadow="md"
                 rounded="md"
                 bg="gray.50"
+                onClick={() => handleArticleClick(article)}
               >
                 {article ? (
                   <Link href={article.url} target="_blank">

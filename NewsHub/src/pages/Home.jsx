@@ -1,17 +1,18 @@
 /* eslint-disable no-unused-vars */
 import { Flex, Box, Divider } from "@chakra-ui/react";
-import MainLeft from "../component/MainLeft";
-import MainContent from "../component/MainContent";
-import MainRight from "../component/MainRight";
-import CenteredContent from "../component/CenteredContent";
-import SecondMainContent from "../component/SecondMainContent";
-import ThirdMainContent from "../component/ThirdMainContent";
+import MainLeft from "../component/MainContent/MainLeft";
+import MainContent from "../component/MainContent/MainContent";
+import MainRight from "../component/MainContent/MainRight";
+import CenteredContent from "../component/MainContent/CenteredContent";
+import SecondMainContent from "../component/MainContent/SecondMainContent";
+import ThirdMainContent from "../component/MainContent/ThirdMainContent";
 import Navbar from "../component/navbar";
 
 const Home = () => {
   return (
     <>
       <Navbar />
+
       <Box>
         <Flex
           direction="row"

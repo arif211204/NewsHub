@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Box, Link, Text, Fade, Center, Skeleton } from "@chakra-ui/react";
-import { fetchTopBusinessHeadlines } from "../utils/api";
+import { fetchTopBusinessHeadlines } from "../../utils/api";
 
 const MainLeft = () => {
   const [articles, setArticles] = useState([]);
@@ -10,7 +10,7 @@ const MainLeft = () => {
     const fetchData = async () => {
       try {
         const data = await fetchTopBusinessHeadlines();
-        setArticles(data.slice(0, 7));
+        setArticles(data.slice(0, 6));
         setLoading(false);
       } catch (error) {
         console.error("Error fetching top business headlines:", error);
@@ -20,6 +20,13 @@ const MainLeft = () => {
 
     fetchData();
   }, []);
+  const handleArticleClick = (article) => {
+    const readArticles = JSON.parse(localStorage.getItem("readArticles")) || [];
+    localStorage.setItem(
+      "readArticles",
+      JSON.stringify([...readArticles, article])
+    );
+  };
 
   return (
     <>
@@ -39,6 +46,7 @@ const MainLeft = () => {
               margin={2}
               transition="all 0.3s ease-in-out"
               _hover={{ boxShadow: "lg", transform: "scale(1.05)" }}
+              onClick={() => handleArticleClick(article)}
             >
               <Link href={article?.url} target="_blank">
                 <Skeleton isLoaded={!loading}>
