@@ -1,9 +1,18 @@
-import HomePage from "../pages/Home"; // Make sure to import the HomePage component correctly
+import HomePage from "../pages/Home";
+import ReadArticles from "../pages/ReadArticles";
+import SearchPage from "../pages/SearchPage";
 
-// Define your routes
 export const routes = [
   {
     path: "/",
     element: <HomePage />,
+  },
+  {
+    path: "/article",
+    element: <ReadArticles />,
+  },
+  {
+    path: "/search",
+    element: <SearchPage />,
   },
 ];

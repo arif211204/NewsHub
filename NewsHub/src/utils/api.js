@@ -1,5 +1,5 @@
 export const fetchArticles = async () => {
-  const apiUrl = `https://newsapi.org/v2/everything?q=apple&from=2024-02-22&to=2024-02-22&sortBy=popularity&apiKey=5bda6a1c42e243d896828e51b2ff6806`;
+  const apiUrl = `https://newsapi.org/v2/everything?q=apple&from=2024-02-22&to=2024-02-22&sortBy=popularity&apiKey=4d6c444ba6894b8090fd422cf177748c`;
 
   try {
     const response = await fetch(apiUrl);
@@ -38,7 +38,7 @@ export const fetchArticles = async () => {
 
   
   export const fetchTopBusinessHeadlines = async () => {
-    const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=5bda6a1c42e243d896828e51b2ff6806`;
+    const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=4d6c444ba6894b8090fd422cf177748c`;
   
     try {
       const response = await fetch(apiUrl);
@@ -55,26 +55,42 @@ export const fetchArticles = async () => {
   };
 
   
-//         const response = await fetch(apiUrl);
-//         const data = await response.json();
-//         return formatArticles(data.articles);
-//     } catch (error) {
-//         console.error('Error fetching Wall Street Journal articles:', error);
-//         return [];
-//     }
-// };
-// export const fetchTechCrunchTopHeadlines = async () => {
+export const fetchTechCrunchTopHeadlines = async () => {
 
-//     const apiUrl = `https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=924c3c853220400d9d9ea4efc15ec8b0`;
+  const apiUrl = `https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=4d6c444ba6894b8090fd422cf177748c`;
 
-//     try {
-//         const response = await fetch(apiUrl);
-//         const data = await response.json();
-//         return formatArticles(data.articles);
-//     } catch (error) {
-//         console.error('Error fetching TechCrunch top headlines:', error);
-//         return [];
-//     }
-// };
+  try {
+    const response = await fetch(apiUrl);
+    if (response.status === 429) {
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      return fetchTechCrunchTopHeadlines();
+    }
+    const data = await response.json();
+    return formatArticles(data.articles.slice(0, 10));
+  } catch (error) {
+    console.error('Error fetching top business headlines:', error);
+    return [];
+  }
+}
+
+
+export const fetchArticlesByTitle = async (title, fromDate, toDate, sortBy) => {
+  try {
+    const response = await fetch(`https://newsapi.org/v2/everything?q=${title}&from=${fromDate}&to=${toDate}&sortBy=${sortBy}&pageSize=20&apiKey=4d6c444ba6894b8090fd422cf177748c`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to fetch articles");
+    }
+
+    const formattedArticles = formatArticles(data.articles);
+    console.log(formattedArticles);
+    return formattedArticles;
+  } catch (error) {
+    console.error("Error fetching articles by title:", error);
+    throw error;
+  }
+};
+
 
 

@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Input,
   InputGroup,
@@ -9,43 +8,32 @@ import {
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 
-import { fetchArticles } from "../utils/api";
-
-const SearchInput = ({ setSearchResults }) => {
+const SearchInput = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
-  // const handleSearch = async () => {
-  //   try {
-  //     const data = await fetchArticles(searchTerm);
-  //     setSearchResults(data);
-  //     console.log(data, "satasearch");
-  //   } catch (error) {
-  //     console.error("Error fetching articles:", error);
-  //   }
-  // };
+  const handleSearch = () => {
+    if (searchTerm.trim() !== "") {
+      navigate(`/search?q=${searchTerm}`);
+    }
+  };
 
   return (
     <InputGroup mb={4} w="50%">
       <Input
-        marginLeft={10}
-        placeholder="Search news..."
+        placeholder="Search news by title..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        bg="white"
-        border="1px solid #CBD5E0"
-        color={"black"}
-        borderRadius="md"
-        _hover={{
-          borderColor: "#CBD5E0",
-        }}
-        _focus={{
-          borderColor: "#CBD5E0",
-          boxShadow: "0 0 0 2px #CBD5E0",
+        onKeyPress={(e) => {
+          if (e.key === "Enter") handleSearch();
         }}
       />
-
       <InputRightElement width="4.5rem">
-        <IconButton aria-label="Search database" icon={<SearchIcon />} />
+        <IconButton
+          aria-label="Search"
+          icon={<SearchIcon />}
+          onClick={handleSearch}
+        />
       </InputRightElement>
     </InputGroup>
   );
